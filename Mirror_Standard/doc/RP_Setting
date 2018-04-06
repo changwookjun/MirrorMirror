@@ -1,0 +1,35 @@
+1. sudo nano /boot/config.txt
+display_rotate=1
+
+2. sudo nano /etc/lightdm/lightdm.conf
+80번째 라인쯤에서,
+# xserver-command = X -s 0 -dpms
+
+3. sudo nano /etc/X11/xinit/xinitrc 
+. /etc/X11/Xsession 밑에, 아래 3줄 추가
+
+xset s off
+xset -dpms
+xset s noblank
+
+4. 마우스 숨김
+sudo apt-get install unclutter
+sudo nano /etc/xdg/xsession/LXDE/autostart
+맨밑줄에 추가
+@unclutter -idle 0.1 -root 
+
+5. 자동 부팅 설정
+cd /home/pi
+nano mirror-mirror.sh
+
+#! /bin/bash
+export DISPLAY=:0
+export XAUTHORITY=/home/pi .Xauthority
+cd /home/pi/Mirror/git_1007/mirror-mirror-/talking-mirror/smart-mirror && npm start
+
+chown pi:pi /home/pi/mirror-mirror.sh
+chmod +x /home/pi/mirror-mirror.sh
+
+sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+맨밑라인에,
+/home/pi/mirror-mirror.sh&

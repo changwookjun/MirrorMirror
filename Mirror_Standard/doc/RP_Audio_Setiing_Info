@@ -1,0 +1,50 @@
+0. sudo amixer cset numid=3 1
+
+1. sudo nano /usr/share/alsa/alsa.conf
+
+defaults.ctl.card 1
+defaults.pcm.card 0
+
+2. nano ~/.asoundrc
+
+pcm.pluged {
+        type plug
+        slave.pcm "hw:0,0"
+}
+
+pcm.dsnooped {
+        ipc_key 1027
+        type dsnoop
+        slave.pcm "hw:1,0"
+}
+
+pcm.asymed {
+        type asym
+        playback.pcm "pluged"
+        capture.pcm "dsnooped"
+}
+
+pcm.pasymed {
+        type plug
+        slave.pcm "asymed"
+}
+
+ctl.pasymed {
+        type hw
+        card 0
+}
+
+pcm.dsp0 {
+        type plug
+        slave.pcm "asymed"
+}
+
+ctl.mixer0 {
+        type hw
+        card 0
+}
+
+pcm.!default {
+        type plug
+        slave.pcm "asymed"
+}
